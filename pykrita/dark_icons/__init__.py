@@ -16,6 +16,26 @@ PRESET_DIM = 150  # 0 = untouched, 255 = black
 PRESET_VIEWS = ("KisResourceItemListView",)
 SIZES = (16, 22, 24, 32, 48, 64)
 _FLAG = "_dark_icons_done"
+# Window title bar / frame (Windows 11 only). RGB.
+FRAME_COLOR = (15, 15, 15)
+FRAME_TEXT = (118, 118, 118)
+
+
+def _color_frame(widget):
+    """Paint the native title bar and border via DWM (Windows 11). Returns HRESULTs."""
+    import ctypes
+    hwnd = int(widget.winId())
+    dwm = ctypes.windll.dwmapi
+    dwm.DwmSetWindowAttribute.argtypes = [ctypes.c_void_p, ctypes.c_uint, ctypes.c_void_p, ctypes.c_uint]
+
+    def put(attr, value):
+        val = ctypes.c_uint(value)
+        return dwm.DwmSetWindowAttribute(hwnd, attr, ctypes.byref(val), 4)
+
+    def rgb(c):
+        return c[0] | (c[1] << 8) | (c[2] << 16)  # COLORREF 0x00BBGGRR
+
+    return [put(20, 1), put(19, 1), put(35, rgb(FRAME_COLOR)), put(34, rgb(FRAME_COLOR)), put(36, rgb(FRAME_TEXT))]
 
 
 def _dim_pixmap(pm):
@@ -96,6 +116,18 @@ class _Dimmer(QObject):
         qwin = win.qwindow() if win else None
         if qwin is None:
             return
+        try:
+            res = _color_frame(qwin)  # repeated: Qt may reset the frame when the window changes
+        except Exception as e:
+            res = repr(e)
+        if res != getattr(self, '_frame_res', None):
+            self._frame_res = res
+            import os
+            try:
+                with open(os.path.join(os.path.dirname(__file__), "frame.log"), "w") as f:
+                    f.write(str(res))
+            except OSError:
+                pass
         for b in qwin.findChildren(QAbstractButton):
             self._fix(b)
         for a in qwin.findChildren(QAction):
