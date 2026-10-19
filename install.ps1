@@ -17,6 +17,21 @@ try {
   if (-not (Test-Path $data) -and -not (Test-Path $rc)) {
     Say 'Warning: no Krita settings found. Start Krita once, close it, then run this again. Installing anyway.' Yellow
   }
+  # 2b. Which Krita version? The plugin needs Krita 6 (PyQt6); older versions only get the color scheme.
+  $major = $null
+  $exe = Get-ChildItem "$env:ProgramFiles\Krita*\bin\krita.exe", "${env:ProgramFiles(x86)}\Krita*\bin\krita.exe", "$env:LOCALAPPDATA\Programs\Krita*\bin\krita.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($exe) { $major = [int]($exe.VersionInfo.ProductVersion -split '\.')[0] }
+  $withPlugin = $true
+  if ($major -and $major -lt 6) {
+    $withPlugin = $false
+    Say '' 
+    Say "WARNING: you have Krita $major. The Dark Icons plugin needs Krita 6, so it will NOT be installed." Yellow
+    Say 'Only the color scheme is installed. Icons stay bright, the title bar and brush presets are not changed.' Yellow
+    Say 'Tip: Krita 6 is a free download from krita.org if you want the full effect.' Yellow
+    Say ''
+  } elseif (-not $major) {
+    Say 'Could not detect your Krita version. This works with Krita 6 only (the color scheme also on older versions).' Yellow
+  }
   # 3. Backup the settings file (never touched without a copy).
   if (Test-Path $rc) {
     $bak = "$rc.backup-before-krita-dark"
@@ -26,7 +41,7 @@ try {
   # 4. Copy files.
   New-Item -ItemType Directory -Force "$data\color-schemes", "$data\pykrita" | Out-Null
   Copy-Item "$here\color-schemes\*.colors" "$data\color-schemes\" -Force
-  Copy-Item "$here\pykrita\*" "$data\pykrita\" -Recurse -Force
+  if ($withPlugin) { Copy-Item "$here\pykrita\*" "$data\pykrita\" -Recurse -Force }
   # 5. Enable plugin + select theme.
   $lines = New-Object 'System.Collections.Generic.List[string]'
   if (Test-Path $rc) { Get-Content $rc | ForEach-Object { $lines.Add($_) } }
@@ -38,11 +53,16 @@ try {
     }
     $lines.Insert($i + 1, "$key=$value")
   }
-  Set-Key 'python' 'enable_dark_icons' 'true'
+  # top-level key (before the first [section]): canvas border = the area around the image
+  $first = 0; while ($first -lt $lines.Count -and $lines[$first] -notmatch '^\[') { $first++ }
+  $hit = $false
+  for ($j = 0; $j -lt $first; $j++) { if ($lines[$j] -like 'canvasBorderColor=*') { $lines[$j] = 'canvasBorderColor=0,0,0'; $hit = $true } }
+  if (-not $hit) { $lines.Insert(0, 'canvasBorderColor=0,0,0') }
+  if ($withPlugin) { Set-Key 'python' 'enable_dark_icons' 'true' }
   Set-Key 'theme' 'Theme' 'Photoshop Dark'
   Set-Content $rc $lines -Encoding UTF8
   # 6. Verify.
-  $ok = (Test-Path "$data\color-schemes\PhotoshopDark.colors") -and (Test-Path "$data\pykrita\dark_icons\__init__.py") -and (Test-Path "$data\pykrita\dark_icons.desktop") -and ((Get-Content $rc) -contains 'enable_dark_icons=true')
+  $ok = (Test-Path "$data\color-schemes\PhotoshopDark.colors") -and (-not $withPlugin -or ((Test-Path "$data\pykrita\dark_icons\__init__.py") -and (Test-Path "$data\pykrita\dark_icons.desktop") -and ((Get-Content $rc) -contains 'enable_dark_icons=true')))
   if (-not $ok) { throw 'Verification failed - something was not copied.' }
   Say ''
   Say 'DONE. Everything installed. Now start Krita.' Green

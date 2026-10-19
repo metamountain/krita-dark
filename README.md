@@ -7,9 +7,20 @@ A very dark, low-contrast, pure-greyscale theme for Krita (darker than Photoshop
 | Part | What it does |
 |---|---|
 | `color-schemes/PhotoshopDark.colors` | Greyscale color scheme: window 15, buttons 22, view/brush background black, soft text. Derived from Breeze Dark; no blue anywhere. |
-| `pykrita/dark_icons` | Python plugin "Dark Icons": darkens all button/toolbar icons and the brush preset thumbnails (fixed light images the scheme can't recolor), and paints the window title bar/border dark (Windows 11). |
+| `pykrita/dark_icons` | Python plugin "Dark Icons": darkens all button/toolbar icons and the brush preset thumbnails (fixed light images the scheme can't recolor), and paints the window title bar/border dark (Windows 11). The installer also sets the canvas border (area around the image) to black. |
 
-Tested target: Krita 6.0.x on Windows (PyQt6). The plugin is young - report problems as issues.
+> [!WARNING]
+> **Krita 5 and older: only the color scheme works.** The Dark Icons plugin needs **Krita 6** (PyQt6) and does not run on Krita 5 or 4. The installer detects your version and skips the plugin on older Krita; the icons, brush presets and title bar then stay bright. Krita 6 is a free download from krita.org.
+
+**Tested on Krita 6.0.4, Windows 11.** The plugin is young - report problems as issues.
+
+### Other versions
+| | Krita 6.x | Krita 5.x / 4.x | Windows 10 |
+|---|---|---|---|
+| Color scheme | works | should work (same KDE `.colors` format; untested) | works |
+| Dark Icons plugin | works | **no** - it needs PyQt6, older Krita ships PyQt5 | icons/presets yes, title bar color no |
+
+On older Krita you can still use the color scheme alone: copy `color-schemes\PhotoshopDark.colors` to `%APPDATA%\krita\color-schemes\`.
 
 ## Install (Windows) - 3 steps
 1. Download `krita-dark.zip` from Releases, right-click it > **Extract All**.
