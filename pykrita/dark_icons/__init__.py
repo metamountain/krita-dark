@@ -12,7 +12,7 @@ DIM = 120
 # Brush preset thumbnails ship with a light grey/white background. Darkening
 # the preset lists keeps their colors but turns the background dark.
 DIM_PRESETS = True
-PRESET_DIM = 150  # 0 = untouched, 255 = black
+PRESET_DIM = 120  # 0 = untouched, 255 = black
 PRESET_VIEWS = ("KisResourceItemListView",)
 SIZES = (16, 22, 24, 32, 48, 64)
 _FLAG = "_dark_icons_done"

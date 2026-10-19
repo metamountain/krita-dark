@@ -62,7 +62,7 @@ try {
   Set-Key 'theme' 'Theme' 'Photoshop Dark'
   # standard darkness values; never overwrite what the user chose with SETTINGS.bat
   $cfgFile = Join-Path $data 'dark_icons.json'
-  if ($withPlugin -and -not (Test-Path $cfgFile)) { '{ "icon_dim": 120, "preset_dim": 150 }' | Set-Content $cfgFile -Encoding UTF8 }
+  if ($withPlugin -and -not (Test-Path $cfgFile)) { '{ "icon_dim": 120, "preset_dim": 120 }' | Set-Content $cfgFile -Encoding UTF8 }
   Set-Content $rc $lines -Encoding UTF8
   # 6. Verify.
   $ok = (Test-Path "$data\color-schemes\PhotoshopDark.colors") -and (-not $withPlugin -or ((Test-Path "$data\pykrita\dark_icons\__init__.py") -and (Test-Path "$data\pykrita\dark_icons.desktop") -and ((Get-Content $rc) -contains 'enable_dark_icons=true')))

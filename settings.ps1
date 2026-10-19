@@ -1,6 +1,6 @@
 # Asks how dark the icons and brush presets should be. Double-click SETTINGS.bat.
 $f = Join-Path $env:APPDATA 'krita\dark_icons.json'
-$default = @{ icon_dim = 120; preset_dim = 150 }
+$default = @{ icon_dim = 120; preset_dim = 120 }
 $cfg = @{ icon_dim = $default.icon_dim; preset_dim = $default.preset_dim }
 if (Test-Path $f) { try { (Get-Content $f -Raw | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $cfg[$_.Name] = [int]$_.Value } } catch {} }
 
@@ -13,7 +13,7 @@ Write-Host '    255 = completely black (invisible)'
 Write-Host '    Higher number = darker.'
 Write-Host ''
 Write-Host "Icons         (toolbar, toolbox, dockers)  standard: $($default.icon_dim)   - good range 90-160"
-Write-Host "Brush presets (the brush thumbnails)       standard: $($default.preset_dim)   - good range 100-200"
+Write-Host "Brush presets (the brush thumbnails)       standard: $($default.preset_dim)   - good range 90-200"
 Write-Host ''
 Write-Host 'Enter = keep the current value.   D = back to the standard values.'
 Write-Host ''
