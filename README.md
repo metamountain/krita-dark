@@ -2,6 +2,8 @@
 
 A very dark, low-contrast, pure-greyscale theme for Krita (darker than Photoshop's darkest), plus a plugin that dims Krita's bright white icons.
 
+[![Krita with the Photoshop Dark theme - click to enlarge](docs/screenshot.jpg)](docs/screenshot-full.jpg)
+
 | Part | What it does |
 |---|---|
 | `color-schemes/PhotoshopDark.colors` | Greyscale color scheme: window 15, buttons 22, view/brush background black, soft text. Derived from Breeze Dark; no blue anywhere. |
