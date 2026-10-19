@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=dark_icons
+X-Python-2-Compatible=false
+Name=Dark Icons
+Comment=Darkens all toolbar, toolbox and docker icons (no more bright white icons)
