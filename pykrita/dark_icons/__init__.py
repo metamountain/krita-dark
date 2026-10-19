@@ -16,6 +16,22 @@ PRESET_DIM = 150  # 0 = untouched, 255 = black
 PRESET_VIEWS = ("KisResourceItemListView",)
 SIZES = (16, 22, 24, 32, 48, 64)
 _FLAG = "_dark_icons_done"
+
+
+def _load_settings():
+    """Optional overrides from dark_icons.json in the Krita data folder (written by SETTINGS.bat)."""
+    global DIM, PRESET_DIM
+    import json, os
+    try:
+        with open(os.path.join(os.environ["APPDATA"], "krita", "dark_icons.json"), encoding="utf-8-sig") as f:
+            cfg = json.load(f)
+        DIM = max(0, min(255, int(cfg.get("icon_dim", DIM))))
+        PRESET_DIM = max(0, min(255, int(cfg.get("preset_dim", PRESET_DIM))))
+    except Exception:
+        pass
+
+
+_load_settings()
 # Window title bar / frame (Windows 11 only). RGB.
 FRAME_COLOR = (15, 15, 15)
 FRAME_TEXT = (118, 118, 118)

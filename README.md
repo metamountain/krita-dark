@@ -38,8 +38,8 @@ Double-click **UNINSTALL.bat**. It removes both parts and restores your old sett
 - Krita: Settings > Configure Krita > Python Plugin Manager > enable **Dark Icons**; General > Themes > **Photoshop Dark**; restart.
 
 ## Tuning
+- **Icon and brush preset darkness: double-click `SETTINGS.bat`**, type a number (0 = untouched, 255 = black; standard is 120 for icons, 150 for brush presets; Enter keeps the current value, D resets to standard), restart Krita. The values are stored in `%APPDATA%\krita\dark_icons.json`, so updates don't reset them.
 - Title bar colors: `FRAME_COLOR` / `FRAME_TEXT`; brush preset darkness: `PRESET_DIM` (all at the top of `pykrita/dark_icons/__init__.py`).
-- Icon darkness: `DIM` at the top of `pykrita/dark_icons/__init__.py` (0 = untouched, 255 = black; default 120). Restart Krita.
 - Colors: edit the RGB triples in the `.colors` file (all grey: R=G=B).
 
 ## License

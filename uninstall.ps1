@@ -8,6 +8,7 @@ try {
   $rc   = Join-Path $env:LOCALAPPDATA 'kritarc'
   $bak  = "$rc.backup-before-krita-dark"
   Remove-Item "$data\color-schemes\PhotoshopDark.colors", "$data\pykrita\dark_icons.desktop" -Force -ErrorAction SilentlyContinue
+  Remove-Item "$data\dark_icons.json" -Force -ErrorAction SilentlyContinue
   Remove-Item "$data\pykrita\dark_icons" -Recurse -Force -ErrorAction SilentlyContinue
   if (Test-Path $bak) { Copy-Item $bak $rc -Force; Remove-Item $bak; Write-Host 'Your old settings were restored.' }
   Write-Host 'DONE. Krita Dark removed.' -ForegroundColor Green
